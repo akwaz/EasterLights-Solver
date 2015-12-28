@@ -153,6 +153,7 @@ public class MainPanel extends JPanel {
 		add(lblHTemple);
 		
 		buttonGo = new JButton("Calculate");
+		buttonGo.setEnabled(false);
 		buttonGo.setFont(new Font("Titillium Web", Font.PLAIN, 14));
 		buttonGo.setForeground(UIManager.getColor("Button.darkShadow"));
 		buttonGo.setBackground(UIManager.getColor("Button.disabledShadow"));
