@@ -31,11 +31,6 @@ public class Simulation {
 		initializeLightsAndSwitches();
 		turnDefaultLightsOn(data.get(0));
 		hanSoloLights();
-		System.out.println("Length: " + data.get(7).size()); //TODO TEST
-		System.out.println(data.get(7));
-		System.out.println(data.get(1));
-		System.out.println(data.get(0));
-
 	}
 	
 	/* public boolean solve()
@@ -59,20 +54,8 @@ public class Simulation {
 		for (int i = 1; i < 128; i++) {
 			this.testSequence = this.createSequence(i);
 			
-			//TODO test
-			System.out.print("Sequence no. " + i + ": [");
-			for (boolean han : testSequence) {
-				System.out.print(han + ", ");
-			}
-			System.out.print("] \r\n");
-			
 			if (this.checkSequence()) {
 				this.solution = this.testSequence;
-				
-				//TODO test
-				for(boolean meme : solution) {
-					System.out.println(meme);
-				}
 				this.switchMap.clear();
 				return true;
 			}
@@ -95,18 +78,11 @@ public class Simulation {
 	}
 	
 	private void turnDefaultLightsOn(ArrayList<Integer> data) {
-		/*for (int i : data) { //TODO test
-			System.out.println("Default: " + data);
-		}*/
 		for (int i = 0; i<data.size(); i++) {
 			
 			//turn on all default lights in this.lights array
 			this.lights[data.get(i) - 1] = true;
-		}
-		
-		int i = 1;
-		for(boolean a : lights) {System.out.println(i + ": " + a); i++;} //TODO test
-		
+		}		
 	}
 	
 	private void hanSoloLights () { //ha ha
@@ -126,23 +102,6 @@ public class Simulation {
 		for (int i = 1; i <= 20; i++) {
 			if (this.soloLights.contains(i)) this.lights[i-1] = true;
 		}
-		
-		
-		/*//TODO test
-		int x=1;
-		System.out.println("Solo lights: [" );
-		for (int i : tempArray) { 
-			System.out.println(" Light no. " + x + ": " + i + ", ");
-			x++;
-		}
-		System.out.print("]");
-		
-		x = 1;
-		System.out.println("Lights on: [" );
-		for (boolean z : this.lights) {
-			System.out.println(" Light no. " + x + ": " + z + ", ");
-			x++;
-		}*/
 	}
 	
 	private void backToDefault() {
@@ -189,10 +148,10 @@ public class Simulation {
 	}
 	
 	private boolean checkIfSingle(int light) {
-		boolean isDefaultOrSingle = false;
+		boolean isSingle = false;
 	
-		if (this.soloLights.contains(light)) isDefaultOrSingle = true;
+		if (this.soloLights.contains(light)) isSingle = true;
 		
-		return isDefaultOrSingle;
+		return isSingle;
 	}
 }
