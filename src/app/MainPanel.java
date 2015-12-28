@@ -30,15 +30,16 @@ public class MainPanel extends JPanel {
 	private JTextField textPagoda;
 	private JTextField textFurnace;
 	private JTextField textWaterfall;
+	private JTextField textTemple;
 	private JTextField textRock;
 	private JTextField textPier;
-	private JTextField textTemple;
 	private DocumentListener textChangeListener;
 	private JButton buttonGo, buttonClear;
 	private JTextField textDefaultLights;
 	private JTextField result;
 	ArrayList<ArrayList<Integer>>allLights = new ArrayList<ArrayList<Integer>>(); // used to store all entries - index 0 stores default lights
 	
+	String[] namesMap = {"A: Tree", "B: Pagoda", "C: Furnace", "D: Waterfall", "E: Rock", "G: Pier", "H: Temple"}; //used to store names of buttons
 	boolean[] solution = new boolean[7];//will be filled with solution by Simulation object
 	
 	/**
@@ -49,20 +50,9 @@ public class MainPanel extends JPanel {
 		setLayout(null);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		textChangeListener = new DocumentListener() {
 			public void changedUpdate(DocumentEvent documentEvent) {
 				validateAfterChange(documentEvent);
@@ -76,7 +66,6 @@ public class MainPanel extends JPanel {
 			
 		};
 		textTree = new JTextField();
-		textTree.setText("4;8;9;11;12;14;15;17");
 		textTree.setToolTipText("");
 		textTree.setFont(new Font("Open Sans", Font.PLAIN, 12));
 		textTree.setBounds(103, 83, 176, 20);
@@ -86,7 +75,6 @@ public class MainPanel extends JPanel {
 	
 		
 		textPagoda = new JTextField();
-		textPagoda.setText("1;2;3;10;11;16;17;19");
 		textPagoda.setFont(new Font("Open Sans", Font.PLAIN, 12));
 		textPagoda.setBounds(103, 114, 176, 20);
 		add(textPagoda);
@@ -94,7 +82,6 @@ public class MainPanel extends JPanel {
 		textPagoda.getDocument().addDocumentListener(textChangeListener);
 
 		textFurnace = new JTextField();
-		textFurnace.setText("1;6;7;9;10;11;12;14;17;20");
 		textFurnace.setFont(new Font("Open Sans", Font.PLAIN, 12));
 		textFurnace.setBounds(103, 145, 176, 20);
 		add(textFurnace);
@@ -102,36 +89,32 @@ public class MainPanel extends JPanel {
 		textFurnace.getDocument().addDocumentListener(textChangeListener);
 
 		textWaterfall = new JTextField();
-		textWaterfall.setText("5;13;18");
 		textWaterfall.setFont(new Font("Open Sans", Font.PLAIN, 12));
 		textWaterfall.setBounds(103, 176, 176, 20);
 		add(textWaterfall);
 		textWaterfall.setColumns(10);
 		textWaterfall.getDocument().addDocumentListener(textChangeListener);
 
+		textTemple = new JTextField();
+		textTemple.setFont(new Font("Open Sans", Font.PLAIN, 12));
+		textTemple.setBounds(103, 269, 176, 20);
+		add(textTemple);
+		textTemple.setColumns(10);
+		textTemple.getDocument().addDocumentListener(textChangeListener);
+
 		textRock = new JTextField();
-		textRock.setText("3;4;8;11;15;17;19");
 		textRock.setFont(new Font("Open Sans", Font.PLAIN, 12));
-		textRock.setBounds(103, 269, 176, 20);
+		textRock.setBounds(103, 207, 176, 20);
 		add(textRock);
 		textRock.setColumns(10);
 		textRock.getDocument().addDocumentListener(textChangeListener);
 
 		textPier = new JTextField();
-		textPier.setText("5;6;7;11;13;17;18;20");
 		textPier.setFont(new Font("Open Sans", Font.PLAIN, 12));
-		textPier.setBounds(103, 207, 176, 20);
+		textPier.setBounds(103, 238, 176, 20);
 		add(textPier);
 		textPier.setColumns(10);
 		textPier.getDocument().addDocumentListener(textChangeListener);
-
-		textTemple = new JTextField();
-		textTemple.setText("9;12;14");
-		textTemple.setFont(new Font("Open Sans", Font.PLAIN, 12));
-		textTemple.setBounds(103, 238, 176, 20);
-		add(textTemple);
-		textTemple.setColumns(10);
-		textTemple.getDocument().addDocumentListener(textChangeListener);
 
 		
 		JLabel labelTree = new JLabel("A: Tree");
@@ -178,13 +161,13 @@ public class MainPanel extends JPanel {
 				if (validateAllFields()) {
 					collectData();
 					Simulation simulation = new Simulation(allLights);
-					/*simulation.findASolution();
-					if (simulation.isSolutionFound) {
+					if (simulation.solve()) {
 						solution = simulation.getSolution();
+						showSolution();
 					}
-					for (int x = 0; x < solution.length; x++) {
-						System.out.println("Result: " + solution[x]);
-					}*/
+					else {
+						JOptionPane.showMessageDialog(null, "Unfortunately, no solution was found", "No results", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
@@ -198,9 +181,9 @@ public class MainPanel extends JPanel {
 				textPagoda.setText("");
 				textFurnace.setText("");
 				textWaterfall.setText("");
+				textTemple.setText("");
 				textRock.setText("");
 				textPier.setText("");
-				textTemple.setText("");
 				textDefaultLights.setText("");
 				result.setText("");
 				
@@ -238,15 +221,29 @@ public class MainPanel extends JPanel {
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mntmAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Created with love by akwaz. Thanks for using my software, feel free to contact me anytime - I'm on GitHub and reddit.");
+				JOptionPane.showMessageDialog(null, "Created with love by Arek. Thank you for using this program!"
+						+ "\r\n github.com/akwaz"
+						+ "\r\n reddit.com/u/akwaz");
 			}
 		});
 		mntmAbout.setFont(new Font("Titillium Web", Font.PLAIN, 13));
 		mntmAbout.setBackground(Color.WHITE);
 		mnFile.add(mntmAbout);
 		
+		JMenuItem mntmHelp = new JMenuItem("Help");
+		mntmHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(null, "Use ; (semicolon) to separate the numbers. Top left light "
+						+ "when heading north is the first one, just like in this example "
+						+ "\r\n(North) \r\n[1] [2] [3] [4] [5] [6] [7] "
+						+ "\r\nIf you're not sure, go to this imgur album: imgur.com/a/JHUQx - credits to Apolloxv7");
+			}
+		});
+		mntmHelp.setFont(new Font("Titillium Web", Font.PLAIN, 13));
+		mnFile.add(mntmHelp);
+		
 		textDefaultLights = new JTextField();
-		textDefaultLights.setText("11;17");
+		textDefaultLights.setFont(new Font("Open Sans", Font.PLAIN, 12));
 		textDefaultLights.setBounds(103, 32, 176, 20);
 		add(textDefaultLights);
 		textDefaultLights.setColumns(10);
@@ -269,6 +266,7 @@ public class MainPanel extends JPanel {
 		add(labelLightInfo);
 		
 		result = new JTextField();
+		result.setFont(new Font("Open Sans", Font.PLAIN, 12));
 		result.setEditable(false);
 		result.setBounds(103, 355, 176, 20);
 		add(result);
@@ -285,19 +283,17 @@ public class MainPanel extends JPanel {
 		this.solution = givenSolution;
 	}
 	private boolean isAnyTextfieldEmpty() {
-		if (textDefaultLights.getText().equals("") || textTree.getText().equals("") || textPagoda.getText().equals("") || textFurnace.getText().equals("") || textWaterfall.getText().equals("") || textRock.getText().equals("") || textPier.getText().equals("") || textTemple.getText().equals("")) return true;
+		if (textDefaultLights.getText().equals("") || textTree.getText().equals("") || textPagoda.getText().equals("") || textFurnace.getText().equals("") || textWaterfall.getText().equals("") || textTemple.getText().equals("") || textRock.getText().equals("") || textPier.getText().equals("")) return true;
 		else return false;
 		
 	}
 	private void validateAfterChange(DocumentEvent e) {
 		String text = "";
-		boolean validationOK = true;
 		try {
 			Document document = e.getDocument();
 			text = document.getText(0, document.getLength());
 			
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			JOptionPane.showMessageDialog(null, "An error occured.");	
 		}
 		
@@ -331,9 +327,9 @@ public class MainPanel extends JPanel {
 		String[] partsPagoda = textPagoda.getText().split(";");
 		String[] partsFurnace = textFurnace.getText().split(";"); 
 		String[] partsWaterfall = textWaterfall.getText().split(";");
-		String[] partsRock = textRock.getText().split(";");
-		String[] partsPier = textPier.getText().split(";");
-		String[] partsTemple = textTemple.getText().split(";"); 
+		String[] partsRock = textTemple.getText().split(";");
+		String[] partsPier = textRock.getText().split(";");
+		String[] partsTemple = textPier.getText().split(";"); 
 		String[] partsDefault = textDefaultLights.getText().split(";");
 		
 		if (validateNumbers(partsTree) && validateNumbers(partsPagoda) && validateNumbers(partsFurnace) && validateNumbers(partsWaterfall) && validateNumbers(partsRock) && validateNumbers(partsPier) && validateNumbers(partsTemple) && validateNumbers(partsDefault)) return true;
@@ -341,61 +337,40 @@ public class MainPanel extends JPanel {
 	}
 	
 	private void collectData() {
-		String[] partsTree = textTree.getText().split(";");
-		String[] partsPagoda = textPagoda.getText().split(";");
-		String[] partsFurnace = textFurnace.getText().split(";"); 
-		String[] partsWaterfall = textWaterfall.getText().split(";");
-		String[] partsRock = textRock.getText().split(";");
-		String[] partsPier = textPier.getText().split(";");
-		String[] partsTemple = textTemple.getText().split(";"); 
-		String[] partsDefault = textDefaultLights.getText().split(";");
-
-		//I'm sorry
-		ArrayList<Integer> holder = new ArrayList<Integer>(); 
-		ArrayList<Integer> holder1 = new ArrayList<Integer>();
-		ArrayList<Integer> holder2= new ArrayList<Integer>();
-		ArrayList<Integer> holder3 = new ArrayList<Integer>();
-		ArrayList<Integer> holder4 = new ArrayList<Integer>();
-		ArrayList<Integer> holder5 = new ArrayList<Integer>();
-		ArrayList<Integer> holder6 = new ArrayList<Integer>();
-		ArrayList<Integer> holder7 = new ArrayList<Integer>();//used to temporary store extracted values - will be added to main list later
+		String[][] parts = new String[8][];
+		parts[0] = textDefaultLights.getText().split(";");
+		parts[1] = textTree.getText().split(";");
+		parts[2] = textPagoda.getText().split(";");
+		parts[3] = textFurnace.getText().split(";"); 
+		parts[4] = textWaterfall.getText().split(";");
+		parts[5] = textRock.getText().split(";");
+		parts[6] = textPier.getText().split(";");
+		parts[7] = textTemple.getText().split(";"); 
 		
-		//I'm incredibly sorry
-		for (int i = 0 ; i<partsDefault.length; i++) holder.add(Integer.parseInt(partsDefault[i]));
-		this.allLights.add(holder);
-
-		for (int i : holder) System.out.println("Default-packing: " + i);
-
-		for (int i = 0 ; i<partsTree.length; i++) holder1.add(Integer.parseInt(partsTree[i]));
-		this.allLights.add(holder1);
-		for (int i : holder1) System.out.println("Tree-packing: " + i);
-
+		ArrayList<ArrayList<Integer>> holder = new ArrayList<ArrayList<Integer>>();
 		
-		for (int i = 0 ; i<partsPagoda.length; i++) holder2.add(Integer.parseInt(partsPagoda[i]));
-		this.allLights.add(holder2);
-		for (int i : holder2) System.out.println("Pagoda-packing: " + i);
+		for (int i = 0; i < 8; i++) {
+			for (int x = 0; x < parts[i].length; x++) {
+				holder.add(new ArrayList<Integer>());
+				holder.get(i).add(Integer.parseInt(parts[i][x]));
+				System.out.println(parts[i][x]);
+			}
+			this.allLights.add(holder.get(i));
 
-
-		for (int i = 0 ; i<partsFurnace.length; i++) holder3.add(Integer.parseInt(partsFurnace[i]));
-		this.allLights.add(holder3);
-
-		for (int i = 0 ; i<partsWaterfall.length; i++) holder4.add(Integer.parseInt(partsWaterfall[i]));
-		this.allLights.add(holder4);
-
-		for (int i = 0 ; i<partsRock.length; i++) holder5.add(Integer.parseInt(partsRock[i]));
-		this.allLights.add(holder5);
-
-		for (int i = 0 ; i<partsPier.length; i++) holder6.add(Integer.parseInt(partsPier[i]));
-		this.allLights.add(holder6);
-
-		for (int i = 0 ; i<partsTemple.length; i++) holder7.add(Integer.parseInt(partsTemple[i]));
-		this.allLights.add(holder7);
-
-
-		for (ArrayList<Integer> i : allLights) {
-			for (int x = 0; x< i.size(); x++) System.out.println("Przebieg " + x + ": " + i.get(x));
-		}
-		
+		}	
 	}
 	
+	private String humanFriendlySolution() {
+		String chain = "";
+		for (int i = 0; i < 7; i++) {
+			if (this.solution[i] && i != 6) chain += this.namesMap[i] + ", ";
+			else if (this.solution[i]) chain += this.namesMap[i]; //only for formatting purposes
+		}
+		
+		return chain;
+	}
+	private void showSolution() {
+		String solution = humanFriendlySolution();
+		this.result.setText(solution);
+	}
 }
